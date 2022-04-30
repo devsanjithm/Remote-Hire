@@ -23,7 +23,6 @@ export {
     auth,
     createUserWithEmailAndPassword,
     onAuthStateChanged,
-    signInWithEmailAndPassword,
     signOut
 };
 

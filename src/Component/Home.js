@@ -11,9 +11,13 @@ function Home() {
     const { user, setloadscreen, loadscreen } = useContext(UserContext);
     const navigate = useNavigate();
 
-    if (!user) {
-        navigate("/Login");
-    }
+    useEffect(() => {
+        if (!user) {
+            console.log("hi");
+            navigate("/Login");
+        }
+    }, [user])
+
 
 
     return (

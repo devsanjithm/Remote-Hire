@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import Loading from "./Loading";
 import validator from 'validator';
 import { UserContext } from "../context";
-import { auth, createUserWithEmailAndPassword } from "../firebase";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 toast.configure();
 
@@ -18,7 +18,7 @@ function Signup() {
         mobilenumber: "",
         ConfirmPassword: ""
     }
-
+    const auth = getAuth()
     const [SignupData, setSignupData] = useState(Input);
     const { user, setloadscreen, loadscreen } = useContext(UserContext);
     const navigate = useNavigate();

@@ -6,7 +6,7 @@ import Loading from "./Loading";
 import validator from 'validator';
 import 'react-toastify/dist/ReactToastify.css';
 import { UserContext } from "../context";
-import { auth, signInWithEmailAndPassword } from "../firebase";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 toast.configure();
 
@@ -16,7 +16,7 @@ function Login() {
         email: "",
         password: "",
     }
-
+    const auth = getAuth()
     const [LoginData, setLoginData] = useState(Input);
     const { user, setloadscreen, loadscreen } = useContext(UserContext);
     const navigate = useNavigate();
@@ -29,9 +29,13 @@ function Login() {
         });
     }
 
-    // if (user) {
-    //     navigate("/Home")
-    // }
+    useEffect(() => {
+        if (user) {
+            navigate("/Home")
+        }
+    }, [user])
+
+
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -58,7 +62,6 @@ function Login() {
             .then((userCredential) => {
                 toast.success("Logged in Successfully");
                 setloadscreen(false);
-                navigate("/Home")
             })
             .catch((error) => {
                 const errorCode = error.code;
