@@ -30,7 +30,7 @@ function Home() {
             <button
                 onClick={() => {
                     signOut(auth).then(() => {
-                        toast.suc("LogOut Successfully :)");
+                        toast.success("LogOut Successfully :)");
                     }).catch((error) => {
                         toast.error("Something Wrong. Try After Sometime")
                     });
