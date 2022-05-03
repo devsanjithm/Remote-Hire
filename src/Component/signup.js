@@ -20,14 +20,19 @@ function Signup() {
     }
     const auth = getAuth()
     const [SignupData, setSignupData] = useState(Input);
-    const { user, setloadscreen, loadscreen } = useContext(UserContext);
+    const { setloadscreen, loadscreen } = useContext(UserContext);
     const navigate = useNavigate();
 
+
     useEffect(() => {
-        if (user) {
-            navigate("/Home")
+        let authToken = sessionStorage.getItem('Auth Token')
+        if (authToken) {
+            navigate('/Home')
         }
-    }, [user])
+        if (!authToken) {
+            navigate('/Login')
+        }
+    }, []);
 
 
     function handleInputChange(e) {

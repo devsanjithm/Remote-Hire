@@ -30,11 +30,14 @@ function Login() {
     }
 
     useEffect(() => {
-        if (user) {
-            navigate("/Home")
+        let authToken = sessionStorage.getItem('Auth Token')
+        if (authToken) {
+            navigate('/Home')
         }
-    }, [user])
-
+        if (!authToken) {
+            navigate('/Login')
+        }
+    }, []);
 
 
     function handleSubmit(e) {
@@ -61,6 +64,8 @@ function Login() {
         signInWithEmailAndPassword(auth, LoginData.email, LoginData.password)
             .then((userCredential) => {
                 toast.success("Logged in Successfully");
+                sessionStorage.setItem('Auth Token', userCredential._tokenResponse.refreshToken)
+                navigate("/home")
                 setloadscreen(false);
             })
             .catch((error) => {

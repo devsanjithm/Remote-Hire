@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Navigate, Route } from "react-router-d
 import Login from "./Component/login"
 import Signup from "./Component/signup";
 import Home from "./Component/Home";
+import Add from "./Component/Add";
 import { ContextProvider } from "./context";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -15,6 +16,7 @@ function App() {
 					<Route exact path="/login" element={<Login />} />
 					<Route exact path="/signup" element={<Signup />} />
 					<Route exact path="/Home" element={<Home />} />
+					<Route exact path="/Add" element={<Add />} />
 				</Routes>
 			</Router>
 		</ContextProvider>

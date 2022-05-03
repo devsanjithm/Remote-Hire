@@ -3,7 +3,7 @@ import "./Loadingstyle.css"
 function Loading() {
 
     return (
-        <div className="container">
+        <div className="container1">
             <div class="loader">
                 <div class="inner one"></div>
                 <div class="inner two"></div>
