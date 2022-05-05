@@ -176,7 +176,7 @@ function Home() {
             <div className="flex justify-center">
                 <div class="flex mb-2 w-2/4">
                     <div class="mb-6 mx-2 w-full">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 ">What</label>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 ">What Job are you looking for?</label>
                         <input
                             onChange={handleSearch}
                             type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  focus:outline-none focus:shadow-blue-500 block w-full p-2.5 "
