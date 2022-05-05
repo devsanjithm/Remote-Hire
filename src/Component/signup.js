@@ -5,6 +5,8 @@ import { toast } from "react-toastify";
 import Loading from "./Loading";
 import validator from 'validator';
 import { UserContext } from "../context";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../firebase";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 toast.configure();
@@ -16,7 +18,8 @@ function Signup() {
         username: "",
         password: "",
         mobilenumber: "",
-        ConfirmPassword: ""
+        ConfirmPassword: "",
+        role: ""
     }
     const auth = getAuth()
     const [SignupData, setSignupData] = useState(Input);
@@ -77,8 +80,15 @@ function Signup() {
             toast.error("Password and Confirm must be same");
         }
         setloadscreen(true);
+        const data = {
+            name: SignupData.username,
+            email: SignupData.email,
+            mobilenumber: SignupData.mobilenumber,
+            password: SignupData.password
+        }
         createUserWithEmailAndPassword(auth, SignupData.email, SignupData.password)
-            .then((userCredential) => {
+            .then(async (userCredential) => {
+                await setDoc(doc(db, "Users", userCredential.user.uid), data);
                 toast.success("Account Created Successfully");
                 setloadscreen(false);
                 navigate("/Home");
@@ -86,6 +96,7 @@ function Signup() {
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
+                console.log(error);
                 setloadscreen(false);
                 toast.error(`${errorMessage}`);
             });
