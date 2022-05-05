@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { auth, signOut } from "../firebase";
+import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Hrpage() {
 
     const [BtnToggle, setbtntoggle] = useState(true);
+    const navigate = useNavigate();
     const data = [
 
         {
@@ -22,12 +26,19 @@ function Hrpage() {
     ]
     const [jobdata, setjobdata] = useState(data);
 
+    function Logout() {
+        signOut(auth).then(() => {
+            sessionStorage.removeItem('Auth Token');
+            navigate('/login')
+            toast.success("LogOut Successfully :)");
+        }).catch((error) => {
+            toast.error("Something Wrong. Try After Sometime")
+        });
+    }
 
     return (
         <div>
-
             <div class="container px-4 mx-auto md:flex md:items-center bg-slate-100 p-5 mb-5">
-
                 <div class="flex justify-between items-center">
                     <a href="#" class="font-bold text-4xl text-indigo-600">Remote Hire</a>
                 </div>
@@ -57,7 +68,7 @@ function Hrpage() {
                     >
 
                         <button
-
+                            onClick={Logout}
                             class="bg-red-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
                             Logout
                         </button>
@@ -84,103 +95,99 @@ function Hrpage() {
                             setbtntoggle(false)
                         }}
                     >
-                        Add Employee
+                        Add Jobs
                     </p>
                 </div>
             </div>
+            <div className="">
+                {
+                    BtnToggle ?
+                        <div>
+                            <div className=" m-5 p-2 grid grid-cols-3 ">
 
-            {
-                BtnToggle ?
-                    <div>
-                        <div className=" m-5 p-2 grid grid-cols-3 ">
-
-                            {
-                                jobdata.map((element, index) => {
-                                    return (
-                                        <div key={index} className="p-2">
-                                            <div class="max-w-md rounded overflow-hidden shadow-lg border-[2px] border-blue-900">
-                                                <div class="px-6 pt-4">
-                                                    <div class="font-bold text-2xl">{element.username}</div>
-                                                </div>
-                                                <div class="px-6 pt-4">
-                                                    <div class="font-bold text-2xl">{element.jobrole}</div>
-                                                </div>
-                                                <div className="px-6 pt-1">
-                                                    <p className="text-sm">{element.Experience}</p>
-                                                    <p className="text-sm">{element.jobmode}</p>
-                                                    <p className="text-sm font-bold pt-2">₹{element.jobsalary.from} - ₹{element.jobsalary.to} per year</p>
-                                                </div>
-                                                <div class="px-6 pt-4 pb-2">
-                                                    <p>{element.jobstatus}</p>
-                                                </div>
-                                                <div className="px-6 pt-1 flex justify-center pb-4">
-                                                    <div>
-                                                        <button
-                                                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                                            Approve
-                                                        </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                {
+                                    jobdata.map((element, index) => {
+                                        return (
+                                            <div key={index} className="p-2">
+                                                <div class="max-w-md rounded overflow-hidden shadow-lg border-[2px] border-blue-900">
+                                                    <div class="px-6 pt-4">
+                                                        <div class="font-bold text-2xl">{element.username}</div>
                                                     </div>
-                                                    <div>
-                                                        <button
-                                                            class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                                            Reject
-                                                        </button>
+                                                    <div class="px-6 pt-4">
+                                                        <div class="font-bold text-2xl">{element.jobrole}</div>
+                                                    </div>
+                                                    <div className="px-6 pt-1">
+                                                        <p className="text-sm">{element.Experience}</p>
+                                                        <p className="text-sm">{element.jobmode}</p>
+                                                        <p className="text-sm font-bold pt-2">₹{element.jobsalary.from} - ₹{element.jobsalary.to} per year</p>
+                                                    </div>
+                                                    <div class="px-6 pt-4 pb-2">
+                                                        <p>{element.jobstatus}</p>
+                                                    </div>
+                                                    <div className="px-6 pt-1 flex justify-center pb-4">
+                                                        <div>
+                                                            <button
+                                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                                                Approve
+                                                            </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        </div>
+                                                        <div>
+                                                            <button
+                                                                class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                                                Reject
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        )
+                                    })
+                                }
+
+
+                            </div>
+
+
+
+
+
+                        </div> :
+                        <div className="flex justify-center mt-5 ">
+                            <div className="w-[80%] flex justify-center">
+                                <form style={{ "width": 70 + "%" }}>
+                                    <div class="relative z-0 w-full mb-6 group">
+                                        <input type="text" name="floating_email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" required placeholder=" " />
+                                        <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Job Role</label>
+                                    </div>
+                                    <div class="relative z-0 w-full mb-6 group">
+                                        <input type="text" name="floating_password" id="floating_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
+                                        <label for="floating_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Job Mode</label>
+                                    </div>
+                                    <div class="relative z-0 w-full mb-6 group">
+                                        <input type="text" name="repeat_password" id="floating_repeat_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
+                                        <label for="floating_repeat_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Job Address</label>
+                                    </div>
+
+                                    <div class="grid xl:grid-cols-2 xl:gap-6">
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <input type="text" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="jobsalaryfrom" id="floating_phone" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
+                                            <label for="floating_phone" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Job salary (From)</label>
                                         </div>
-                                    )
-                                })
-                            }
-
-
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <input type="text" name="jobsalaryto" id="floating_company" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
+                                            <label for="floating_company" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Job Salary (TO)</label>
+                                        </div>
+                                    </div>
+                                    <div class="relative z-0 w-full mb-6 group">
+                                        <input type="password" name="repeat_password" id="floating_repeat_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
+                                        <label for="floating_repeat_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Job Specification</label>
+                                    </div>
+                                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                                </form>
+                            </div>
                         </div>
-
-
-
-
-
-                    </div> :
-                    <div>
-                        <center>
-                            <form style={{ "width": 70 + "%" }}>
-                                <div class="relative z-0 w-full mb-6 group">
-                                    <input type="email" name="floating_email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
-                                    <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email address</label>
-                                </div>
-                                <div class="relative z-0 w-full mb-6 group">
-                                    <input type="password" name="floating_password" id="floating_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
-                                    <label for="floating_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
-                                </div>
-                                <div class="relative z-0 w-full mb-6 group">
-                                    <input type="password" name="repeat_password" id="floating_repeat_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
-                                    <label for="floating_repeat_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Confirm password</label>
-                                </div>
-                                <div class="grid xl:grid-cols-2 xl:gap-6">
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <input type="text" name="floating_first_name" id="floating_first_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
-                                        <label for="floating_first_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">First name</label>
-                                    </div>
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <input type="text" name="floating_last_name" id="floating_last_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
-                                        <label for="floating_last_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Last name</label>
-                                    </div>
-                                </div>
-                                <div class="grid xl:grid-cols-2 xl:gap-6">
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="floating_phone" id="floating_phone" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
-                                        <label for="floating_phone" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Phone number (123-456-7890)</label>
-                                    </div>
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <input type="text" name="floating_company" id="floating_company" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
-                                        <label for="floating_company" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Company (Ex. Google)</label>
-                                    </div>
-                                </div>
-                                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-                            </form>
-                        </center>
-                    </div>
-            }
+                }
+            </div>
         </div>
     )
 }

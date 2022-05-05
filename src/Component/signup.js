@@ -96,7 +96,7 @@ function Signup() {
                 await setDoc(doc(db, "Users", userCredential.user.uid), data);
                 toast.success("Account Created Successfully");
                 setloadscreen(false);
-                navigate("/Home");
+                navigate("/Login");
             })
             .catch((error) => {
                 const errorCode = error.code;

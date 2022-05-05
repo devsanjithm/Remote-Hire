@@ -21,7 +21,7 @@ function Login() {
     }
     const auth = getAuth()
     const [LoginData, setLoginData] = useState(Input);
-    const { user, setloadscreen, loadscreen } = useContext(UserContext);
+    const { user, setloadscreen, loadscreen, userroll, setuseroll } = useContext(UserContext);
     const navigate = useNavigate();
 
 
