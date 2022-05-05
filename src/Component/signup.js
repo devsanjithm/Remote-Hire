@@ -79,12 +79,17 @@ function Signup() {
         if (SignupData.password !== SignupData.ConfirmPassword) {
             toast.error("Password and Confirm must be same");
         }
+        if (SignupData.role === "") {
+            toast.error("Role must be specified")
+            return;
+        }
         setloadscreen(true);
         const data = {
             name: SignupData.username,
             email: SignupData.email,
             mobilenumber: SignupData.mobilenumber,
-            password: SignupData.password
+            password: SignupData.password,
+            role: SignupData.role
         }
         createUserWithEmailAndPassword(auth, SignupData.email, SignupData.password)
             .then(async (userCredential) => {
@@ -160,15 +165,22 @@ function Signup() {
                                 <span></span>
                                 <label>Confirm Password</label>
                             </div>
-                           
+
                             <div>
-                                <input type="radio"  value="Employe" name="Employee" /> Employee 
+                                <input type="radio"
+                                    onClick={handleInputChange}
+                                    value="Employee"
+                                    checked={SignupData.role === "Employee"}
+                                    name="role" /> Employee
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <input type="radio"  value="Hr" name="Hr" /> HR
-                                
-                            </div><br/>
+                                <input type="radio"
+                                    onClick={handleInputChange}
+                                    checked={SignupData.role === "Hr"}
+                                    value="Hr" name="role" /> HR
+
+                            </div><br />
                             <input type="submit"
-                                onClick={handleSubmit} value="Sign up"></input><br/><br/>
+                                onClick={handleSubmit} value="Sign up"></input><br /><br />
                             <div class="signup_link">
                                 Have an account?< Link to="/login">sign in </Link>
                             </div>
