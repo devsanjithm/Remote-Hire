@@ -11,7 +11,7 @@
   .color{
     position: absolute;
   width: 400px;
-  height: 560px;
+  height: 580px;
   left: calc(50% - 496px/2 + 325px);
   top: 10px;
     background: #EDEDED;

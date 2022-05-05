@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 function Hrpage() {
 
-    const [BtnToggle, setbtntoggle] = useState(false);
+    const [BtnToggle, setbtntoggle] = useState(true);
 
     function handletoggle() {
         setbtntoggle(!BtnToggle);

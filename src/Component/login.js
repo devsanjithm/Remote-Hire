@@ -116,16 +116,12 @@ function Login() {
                                 <span></span>
                                 <label>Password</label>
                             </div>
-                            <div className="txt_field">
-                                <label>
-                                    <input type="radio" />
-                                    <span>Employee</span>
-                                </label>
-                                <label>
-                                    <input type="radio" />
-                                    <span>Employer</span>
-                                </label>
-                            </div>
+                            <div>
+                                <input type="radio"  value="Employe" name="Employee" /> Employee 
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="radio"  value="Hr" name="Hr" /> HR
+                                
+                            </div><br/>
                             < input
                                 onClick={handleSubmit}
                                 type="submit" value="Login" classname="login"></input>

@@ -149,18 +149,15 @@ function Signup() {
                                 <span></span>
                                 <label>Confirm Password</label>
                             </div>
-                            <div className="txt_field">
-                                <label>
-                                    <input type="radio" />
-                                    <span>Employee</span>
-                                </label>
-                                <label>
-                                    <input type="radio" />
-                                    <span>Employer</span>
-                                </label>
-                            </div>
+                           
+                            <div>
+                                <input type="radio"  value="Employe" name="Employee" /> Employee 
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="radio"  value="Hr" name="Hr" /> HR
+                                
+                            </div><br/>
                             <input type="submit"
-                                onClick={handleSubmit} value="Sign up"></input>
+                                onClick={handleSubmit} value="Sign up"></input><br/><br/>
                             <div class="signup_link">
                                 Have an account?< Link to="/login">sign in </Link>
                             </div>
