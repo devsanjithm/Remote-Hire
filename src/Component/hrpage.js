@@ -4,9 +4,6 @@ function Hrpage() {
 
     const [BtnToggle, setbtntoggle] = useState(true);
 
-    function handletoggle() {
-        setbtntoggle(!BtnToggle);
-    }
 
     return (
         <div>
@@ -18,7 +15,7 @@ function Hrpage() {
                 </div>
 
                 <div class="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
-                    <div
+                    {/* <div
                         className="px-3 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
                     >
                         <button
@@ -35,7 +32,7 @@ function Hrpage() {
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
                             Appiled Jobs
                         </button>
-                    </div>
+                    </div> */}
 
                     <div
                         className="px-3 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
@@ -50,31 +47,32 @@ function Hrpage() {
                 </div>
             </div>
 
-            <div className="flex justify-center border border-black">
+            <div className="flex justify-center p-5">
                 <div>
-                    <button
-                    onClick={()=>{
-                        setbtntoggle(true)
-                    }}>
-                        list Employee
-                    </button>
+                    <p
+                        className={!BtnToggle ? "text-2xl font-bold text-blue-800" : "text-2xl font-bold text-red-700 scale-110"}
+                        onClick={() => {
+                            setbtntoggle(true)
+                        }}>
+                        List Employee
+                    </p>
                 </div>
-                <div className="text-blue-900 bg-blue-900 border border-blue-900 mx-5">
-
+                <div className="text-blue-900 bg-blue-900 border border-blue-900 mx-5 h-8">
                 </div>
                 <div>
-                    <button
-                    onClick={()=>{
-                        setbtntoggle(false)
-                    }}
+                    <p
+                        className={BtnToggle ? "text-2xl font-bold text-blue-800" : "text-2xl font-bold text-red-700 scale-110"}
+                        onClick={() => {
+                            setbtntoggle(false)
+                        }}
                     >
                         Add Employee
-                    </button>
+                    </p>
                 </div>
             </div>
 
             {
-               BtnToggle ?
+                BtnToggle ?
                     <div>
                         list Employee
                     </div> :

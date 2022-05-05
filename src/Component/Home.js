@@ -10,6 +10,8 @@ function Home() {
 
     const { user, setloadscreen, loadscreen } = useContext(UserContext);
     const navigate = useNavigate();
+    const [Search, setSearch] = useState("");
+
     const data = [
 
         {
@@ -109,6 +111,20 @@ function Home() {
         navigate('/Add')
     }
 
+    function handleSearch(e) {
+        const value = e.target.value;
+        if (value === "") {
+            setjobdata(data);
+            return;
+        }
+
+        const resuldata = data.filter(item => {
+            const itemdata = item.jobrole.toLowerCase();
+            const resdata = itemdata.indexOf(value) > -1;
+            return resdata;
+        })
+        setjobdata(resuldata)
+    }
 
     return (
         <div>
@@ -128,7 +144,9 @@ function Home() {
                         className="px-3 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
                     >
                         <button
-                            onClick={gotoAdd}
+                            onClick={() => {
+                                navigate("/home")
+                            }}
                             class="bg-indigo-700 shadow-lg hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
                             Find Jobs
                         </button>
@@ -158,22 +176,25 @@ function Home() {
             <div className="flex justify-center">
                 <div class="flex mb-2 w-2/4">
                     <div class="mb-6 mx-2 w-full">
-                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">What</label>
-                        <input type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  focus:outline-none focus:shadow-blue-500 block w-full p-2.5 "
+                        <label class="block mb-2 text-sm font-medium text-gray-900 ">What</label>
+                        <input
+                            onChange={handleSearch}
+                            type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500  focus:outline-none focus:shadow-blue-500 block w-full p-2.5 "
                             placeholder="jobtitle or company" />
                     </div>
-                    <div class="mb-6 mx-2 w-full">
-                        <label for="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Where</label>
-                        <input type="password" id="password" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:outline-none focus:shadow-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    {/* <div class="mb-6 mx-2 w-full">
+                        <label className="block mb-2 text-sm font-medium text-gray-900 ">Where</label>
+                        <input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:outline-none focus:shadow-blue-500 focus:border-blue-500 block w-full p-2.5"
                             placeholder="city" />
-                    </div>
+                    </div> */}
                 </div>
-                <div className="flex justify-center items-center mx-2">
+                {/* <div className="flex justify-center items-center mx-2">
                     <button
+                        onClick={handleSearch}
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         Find
                     </button>
-                </div>
+                </div> */}
             </div>
             <div className="flex  justify-center">
                 <div className="flex-col">

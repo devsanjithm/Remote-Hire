@@ -6,7 +6,9 @@ import Loading from "./Loading";
 import validator from 'validator';
 import 'react-toastify/dist/ReactToastify.css';
 import { UserContext } from "../context";
+import { db, signOut } from '../firebase';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 toast.configure();
 
@@ -15,11 +17,13 @@ function Login() {
     const Input = {
         email: "",
         password: "",
+        role: ""
     }
     const auth = getAuth()
     const [LoginData, setLoginData] = useState(Input);
     const { user, setloadscreen, loadscreen } = useContext(UserContext);
     const navigate = useNavigate();
+
 
     function handleInputChange(e) {
         const { name, value } = e.target;
@@ -60,13 +64,28 @@ function Login() {
             toast.error("Password must contain more than 6 letters")
             return;
         }
+        if (LoginData.role === "") {
+            toast.error("Role must be specified")
+            return;
+        }
         setloadscreen(true);
         signInWithEmailAndPassword(auth, LoginData.email, LoginData.password)
-            .then((userCredential) => {
-                toast.success("Logged in Successfully");
-                sessionStorage.setItem('Auth Token', userCredential._tokenResponse.refreshToken);
-                navigate("/home")
-                setloadscreen(false);
+            .then(async (userCredential) => {
+                const docRef = doc(db, "Users", userCredential.user.uid);
+                const docSnap = await getDoc(docRef);
+                if (LoginData.role === docSnap.data().role) {
+                    toast.success("Logged in Successfully");
+                    sessionStorage.setItem('Auth Token', userCredential._tokenResponse.refreshToken);
+                    navigate("/home")
+                    setloadscreen(false);
+                } else {
+                    toast.error("Choose Correct role")
+                    signOut(auth).then((res) => {
+                        console.log(res);
+                    }).catch((error) => {
+                        console.log(error);
+                    });
+                }
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -116,12 +135,20 @@ function Login() {
                                 <span></span>
                                 <label>Password</label>
                             </div>
-                            <div>
-                                <input type="radio"  value="Employe" name="Employee" /> Employee 
+                            <div >
+                                <input
+                                    onClick={handleInputChange}
+                                    type="radio"
+                                    value="Employee"
+                                    name="role" /> Employee
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <input type="radio"  value="Hr" name="Hr" /> HR
-                                
-                            </div><br/>
+                                <input
+                                    type="radio"
+                                    onClick={handleInputChange}
+                                    value="Hr"
+                                    name="role" /> HR
+                            </div>
+                            <br />
                             < input
                                 onClick={handleSubmit}
                                 type="submit" value="Login" classname="login"></input>
