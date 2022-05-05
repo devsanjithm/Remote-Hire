@@ -64,7 +64,7 @@ function Login() {
         signInWithEmailAndPassword(auth, LoginData.email, LoginData.password)
             .then((userCredential) => {
                 toast.success("Logged in Successfully");
-                sessionStorage.setItem('Auth Token', userCredential._tokenResponse.refreshToken)
+                sessionStorage.setItem('Auth Token', userCredential._tokenResponse.refreshToken);
                 navigate("/home")
                 setloadscreen(false);
             })
