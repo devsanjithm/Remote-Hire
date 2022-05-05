@@ -8,6 +8,7 @@ const ContextProvider = ({ children }) => {
 
     const [user, setUser] = useState("");
     const [loadscreen, setloadscreen] = useState(true);
+    const [userroll,setuserroll]  = useState("");
 
 
     useEffect(() => {
@@ -19,7 +20,7 @@ const ContextProvider = ({ children }) => {
 
     return (
         <UserContext.Provider
-            value={{ user, setUser, loadscreen, setloadscreen }}>
+            value={{ user, setUser, loadscreen, setloadscreen,userroll,setuserroll }}>
             {children}
         </UserContext.Provider>
     );

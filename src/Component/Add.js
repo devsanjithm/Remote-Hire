@@ -15,58 +15,32 @@ function Add() {
 
 
     return (
-        <><nav class="navbar navbar-light bg-primary">
-            <div class="container-fluid">
-                <h2>Remote Hire</h2>
-                <div class="d-flex">
+        <><div class="container px-4 mx-auto md:flex md:items-center bg-slate-100 p-5 mb-5">
+
+            <div class="flex justify-between items-center">
+                <a href="#" class="font-bold text-4xl text-indigo-600">Remote Hire</a>
+                <button class="border border-solid border-gray-600 px-3 py-1 rounded text-gray-600 opacity-50 hover:opacity-75 md:hidden" id="navbar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <div class="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
+                <div
+                    className="px-3 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
+                >
                     <button
                         onClick={() => {
-                            navigate("/Home");
+                            navigate("/home")
                         }}
-                        class="btn btn-success">Home</button>&nbsp;
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add/Update</button>&nbsp;
-                    <button class="btn btn-danger">Upload Resume</button>&nbsp;
-
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Find Jobs
+                    </button>
                 </div>
             </div>
-        </nav>
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add/Update Details</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                                <div class="mb-3">
-                                    <label class="form-label">Name</label>
-                                    <input type="text" formControlName="name" class="form-control" placeholder="Enter Name" id="exampleInputEmail1" aria-describedby="emailHelp" />
-                                </div>
-                                <div class="mb-3">
-                                    <label for="exampleInputPassword1" class="form-label">Image</label>
-                                    <input type="url" formControlName="image" class="form-control" placeholder="Enter Url here" id="exampleInputPassword1" />
-                                </div>
-                                <div class="mb-3">
-                                    <label for="exampleInputPassword1" class="form-label">Experience</label>
-                                    <input type="text" formControlName="experience" class="form-control" placeholder="Enter Experience" id="exampleInputPassword1" />
-                                </div>
-                                <div class="mb-3">
-                                    <label for="exampleInputPassword1" class="form-label">Date</label>
-                                    <input type="text" formControlName="date" class="form-control" placeholder="Enter the last Date" id="exampleInputPassword1" />
-                                </div>
-                                <div class="mb-3">
-                                    <label for="exampleInputPassword1" class="form-label">Salary</label>
-                                    <input type="number" formControlName="salary" class="form-control" placeholder="Enter the Salary" id="exampleInputPassword1" />
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div></>
+        </div>
+
+
+        </>
     );
 }
 export default Add;

@@ -30,7 +30,7 @@ function Signup() {
             navigate('/Home')
         }
         if (!authToken) {
-            navigate('/Login')
+            navigate('/signup')
         }
     }, []);
 
@@ -139,7 +139,7 @@ function Signup() {
                                     value={SignupData.password}
                                     name="password" required />
                                 <span></span>
-                                <label>password</label>
+                                <label>Password</label>
                             </div>
                             <div class="txt_field" id='Confirm Password'>
                                 <input
@@ -148,6 +148,16 @@ function Signup() {
                                     type="password" name="ConfirmPassword" required></input>
                                 <span></span>
                                 <label>Confirm Password</label>
+                            </div>
+                            <div className="txt_field">
+                                <label>
+                                    <input type="radio" />
+                                    <span>Employee</span>
+                                </label>
+                                <label>
+                                    <input type="radio" />
+                                    <span>Employer</span>
+                                </label>
                             </div>
                             <input type="submit"
                                 onClick={handleSubmit} value="Sign up"></input>
