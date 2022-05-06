@@ -84,7 +84,7 @@ function Hrpage() {
                             setbtntoggle(false)
                         }}
                     >
-                        Add Employee
+                        Add Jobs
                     </p>
                 </div>
             </div>
