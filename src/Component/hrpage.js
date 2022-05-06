@@ -26,6 +26,7 @@ function Hrpage() {
     ]
     const [jobdata, setjobdata] = useState(data);
 
+<<<<<<< HEAD
     function Logout() {
         signOut(auth).then(() => {
             sessionStorage.removeItem('Auth Token');
@@ -35,6 +36,8 @@ function Hrpage() {
             toast.error("Something Wrong. Try After Sometime")
         });
     }
+=======
+>>>>>>> develope
 
     return (
         <div>
@@ -95,7 +98,11 @@ function Hrpage() {
                             setbtntoggle(false)
                         }}
                     >
+<<<<<<< HEAD
                         Add Jobs
+=======
+                        Add Employee
+>>>>>>> develope
                     </p>
                 </div>
             </div>
