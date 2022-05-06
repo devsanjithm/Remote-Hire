@@ -4,7 +4,7 @@ import { auth, signOut, db } from "../firebase";
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import Loading from "./Loading";
-import { doc, getDocs, collection, } from "firebase/firestore";
+import { doc, getDocs,collection, setDoc,getDoc } from "firebase/firestore";
 
 
 function Home() {
@@ -15,6 +15,7 @@ function Home() {
     const data = [];
     const [Search, setSearch] = useState(data);
     const [jobdata, setjobdata] = useState(data);
+    const uid =  localStorage.getItem('uid')
 
     useEffect(() => {
         let authToken = sessionStorage.getItem('Auth Token')
@@ -72,6 +73,17 @@ function Home() {
             return resdata;
         })
         setjobdata([...resuldata])
+    }
+
+    async function handleClick(e){
+        const data =[]
+        console.log(e);
+        const docref = doc(db,"Users",uid);
+        const docsnap = await getDoc(docref);
+        await setDoc(doc(db,"Users",uid),{
+            appiledJob:[e.id]
+        },{merge:true})
+
     }
 
     return (
@@ -153,6 +165,7 @@ function Home() {
             <div className=" m-5 p-2 grid grid-cols-3 ">
                 {
                     jobdata.map((element, index) => {
+
                         return (
                             <div key={index} className="p-2">
                                 <div class="max-w-md rounded min-h-[45vh] max-h-[45vh] overflow-hidden shadow-lg border-[2px] border-blue-900">
@@ -170,7 +183,8 @@ function Home() {
                                     <div className="px-6 pt-1 flex justify-center pb-4">
                                         <div className="">
                                             <button
-                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ">
+                                                onClick={()=>handleClick(element)}
+                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                                 Apply
                                             </button>
                                         </div>
