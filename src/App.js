@@ -6,7 +6,7 @@ import Signup from "./Component/signup";
 import Home from "./Component/Home";
 import Add from "./Component/Add";
 import Hrpage from "./Component/hrpage";
-import Admin from "./Component/Admin";
+import Admin from "./Component/Admin"
 import HrHome from "./Component/hrhome";
 import { ContextProvider } from "./context";
 import 'react-toastify/dist/ReactToastify.css';

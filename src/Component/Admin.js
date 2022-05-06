@@ -1,15 +1,14 @@
+
 import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../context";
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
-
-
 function Admin() {
 
     const [BtnToggle, setbtntoggle] = useState(true);
     const navigate = useNavigate();
-    const { user, setloadscreen, loadscreen, userroll, setuserroll } = useContext(UserContext);
 
+    const { user, setloadscreen, loadscreen, userroll, setuserroll } = useContext(UserContext);
     const data = [
 
         {
@@ -26,6 +25,7 @@ function Admin() {
 
     ]
     const [jobdata, setjobdata] = useState(data);
+
 
 
     useEffect(() => {
@@ -57,7 +57,6 @@ function Admin() {
             setloadscreen(false)
         }
     }
-
 
     return (
         <div>
@@ -96,6 +95,7 @@ function Admin() {
 
 <button
                             onClick={logout}
+
                             class="bg-indigo-700 shadow-lg hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
                             Logout
                         </button>

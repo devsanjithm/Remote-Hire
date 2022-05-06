@@ -13,7 +13,6 @@ function Approve() {
             desg: "Software developer",
             Experience: "12 years",
             Domain: "Web development",
-
         }
 
     ]
@@ -57,6 +56,7 @@ function Approve() {
                     <div
                         className="px-3 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
                     >
+
 
                         <button
                             onClick={() => {
@@ -108,16 +108,8 @@ function Approve() {
                             )
                         })
                     }
-
-
                 </div>
-
-
-
-
-
             </div>
-
         </div>
     )
 }
