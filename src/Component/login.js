@@ -35,9 +35,13 @@ function Login() {
 
     useEffect(() => {
         let authToken = sessionStorage.getItem('Auth Token')
+        let role = localStorage.getItem('role')
+        console.log(authToken);
         if (authToken) {
-            if(userroll === "Hr"){
+            if(role === "Hr"){
                 navigate("/hrhome")
+            }else if(role === "Employee"){
+                navigate("/home")
             }
         }
         if (!authToken) {
