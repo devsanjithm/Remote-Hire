@@ -1,99 +1,48 @@
 import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../context";
-import { auth, signOut } from "../firebase";
+import { auth, signOut,db } from "../firebase";
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import Loading from "./Loading";
+import { doc, getDocs,collection,  } from "firebase/firestore";
 
 
 function Home() {
 
-    const { user, setloadscreen, loadscreen } = useContext(UserContext);
+    const { user, setloadscreen, loadscreen, userroll, setuserroll } = useContext(UserContext);
     const navigate = useNavigate();
-    const [Search, setSearch] = useState("");
-
-    const data = [
-
-        {
-            jobrole: "Software Manager",
-            jobAddress: "Fulfillment Center Services",
-            jobmode: "Remote",
-            jobsalary:
-            {
-                from: "200,000.00",
-                to: "1,200,129.00"
-            },
-            jobspec: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries"
-        },
-        {
-            jobrole: "Software Manager",
-            jobAddress: "Fulfillment Center Services",
-            jobmode: "Remote",
-            jobsalary:
-            {
-                from: "200,000.00",
-                to: "1,200,129.00"
-            },
-            jobspec: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries"
-        },
-        {
-            jobrole: "Software Manager",
-            jobAddress: "Fulfillment Center Services",
-            jobmode: "Remote",
-            jobsalary:
-            {
-                from: "200,000.00",
-                to: "1,200,129.00"
-            },
-            jobspec: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries"
-        },
-        {
-            jobrole: "Software Manager",
-            jobAddress: "Fulfillment Center Services",
-            jobmode: "Remote",
-            jobsalary:
-            {
-                from: "200,000.00",
-                to: "1,200,129.00"
-            },
-            jobspec: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries"
-        },
-        {
-            jobrole: "Software Manager",
-            jobAddress: "Fulfillment Center Services",
-            jobmode: "Remote",
-            jobsalary:
-            {
-                from: "200,000.00",
-                to: "1,200,129.00"
-            },
-            jobspec: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries"
-        },
-        {
-            jobrole: "Software Manager",
-            jobAddress: "Fulfillment Center Services",
-            jobmode: "Remote",
-            jobsalary:
-            {
-                from: "200,000.00",
-                to: "1,200,129.00"
-            },
-            jobspec: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries"
-        },
-    ]
+    
+    const data =[];
+    const [Search, setSearch] = useState(data);
     const [jobdata, setjobdata] = useState(data);
-
 
     useEffect(() => {
         let authToken = sessionStorage.getItem('Auth Token')
-        if (authToken) {
-            navigate('/Home')
+        if (authToken === "65fefd65c4d84d6sa1xad6wf8e6fe") {
+            navigate("/admin")
+        }else{
+            const role = localStorage.getItem("role");
+            if(role === "Hr"){  
+                navigate("/hrhome")
+            }else{
+                navigate("/home")
+            }
         }
         if (!authToken) {
             navigate('/Login')
         }
-    }, []);
-
+        getdata();
+    },[]);
+    
+    async function getdata(){
+        const docRef = collection(db,"Jobs");
+        const docSnap = await getDocs(docRef);
+        docSnap.forEach((doc)=>{
+            data.push(doc.data())
+        })
+        setjobdata([...data]);
+        setSearch([...data])
+    }
 
     function logout() {
         setloadscreen(true)
@@ -114,16 +63,16 @@ function Home() {
     function handleSearch(e) {
         const value = e.target.value;
         if (value === "") {
-            setjobdata(data);
+            setjobdata(Search);
             return;
         }
-
-        const resuldata = data.filter(item => {
+        
+        const resuldata = Search.filter(item => {
             const itemdata = item.jobrole.toLowerCase();
             const resdata = itemdata.indexOf(value) > -1;
             return resdata;
         })
-        setjobdata(resuldata)
+        setjobdata([...resuldata])
     }
 
     return (
@@ -203,7 +152,6 @@ function Home() {
                 </div>
             </div>
             <div className=" m-5 p-2 grid grid-cols-3 ">
-
                 {
                     jobdata.map((element, index) => {
                         return (
@@ -215,7 +163,7 @@ function Home() {
                                     <div className="px-6 pt-1">
                                         <p className="text-sm">{element.jobAddress}</p>
                                         <p className="text-sm">{element.jobmode}</p>
-                                        <p className="text-sm font-bold pt-2">₹{element.jobsalary.from} - ₹{element.jobsalary.to} per year</p>
+                                        <p className="text-sm font-bold pt-2">₹{element.jobsalaryfrom} - ₹{element.jobsalaryto} per year</p>
                                     </div>
                                     <div class="px-6 pt-4 pb-2">
                                         <p>{element.jobspec}</p>

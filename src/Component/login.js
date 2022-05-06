@@ -21,7 +21,7 @@ function Login() {
     }
     const auth = getAuth()
     const [LoginData, setLoginData] = useState(Input);
-    const { user, setloadscreen, loadscreen } = useContext(UserContext);
+    const { user, setloadscreen, loadscreen, userroll, setuserroll } = useContext(UserContext);
     const navigate = useNavigate();
 
 
@@ -36,7 +36,9 @@ function Login() {
     useEffect(() => {
         let authToken = sessionStorage.getItem('Auth Token')
         if (authToken) {
-            navigate('/Home')
+            if(userroll === "Hr"){
+                navigate("/hrhome")
+            }
         }
         if (!authToken) {
             navigate('/Login')
@@ -64,19 +66,32 @@ function Login() {
             toast.error("Password must contain more than 6 letters")
             return;
         }
-        if (LoginData.role === "") {
-            toast.error("Role must be specified")
-            return;
+        if (LoginData.role === "" ) {
+            if(LoginData.email !== "admin@remotehire.com"){
+                toast.error("Role must be specified")
+                return;
+            }
         }
         setloadscreen(true);
+        if(LoginData.email === "admin@remotehire.com" && LoginData.password === "123456"){
+            sessionStorage.setItem('Auth Token', "65fefd65c4d84d6sa1xad6wf8e6fe");
+            navigate("/admin");
+            return;
+        }
         signInWithEmailAndPassword(auth, LoginData.email, LoginData.password)
             .then(async (userCredential) => {
-                const docRef = doc(db, "Users", userCredential.user.uid);
+                const docRef = doc(db, LoginData.role === "Hr" ? "HR":"Users", userCredential.user.uid);
                 const docSnap = await getDoc(docRef);
                 if (LoginData.role === docSnap.data().role) {
+                    localStorage.setItem('role',LoginData.role)
                     toast.success("Logged in Successfully");
                     sessionStorage.setItem('Auth Token', userCredential._tokenResponse.refreshToken);
-                    navigate("/home")
+                    localStorage.setItem('uid',userCredential.user.uid)
+                    if(LoginData.role === "Hr"){
+                        navigate("/hrhome")
+                    }else{
+                        navigate("/home")
+                    }
                     setloadscreen(false);
                 } else {
                     toast.error("Choose Correct role")
@@ -90,6 +105,7 @@ function Login() {
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
+                console.log(error);
                 setloadscreen(false);
                 if (errorCode === "auth/user-not-found") {
                     toast.error("Email not found. Create new account");

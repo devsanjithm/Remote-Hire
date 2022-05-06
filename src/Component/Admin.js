@@ -1,10 +1,14 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
 
+import React, { useState, useContext, useEffect } from "react";
+import { UserContext } from "../context";
+import { toast } from "react-toastify";
+import { useNavigate, Link } from "react-router-dom";
 function Admin() {
 
     const [BtnToggle, setbtntoggle] = useState(true);
     const navigate = useNavigate();
+
+    const { user, setloadscreen, loadscreen, userroll, setuserroll } = useContext(UserContext);
     const data = [
 
         {
@@ -22,6 +26,37 @@ function Admin() {
     ]
     const [jobdata, setjobdata] = useState(data);
 
+
+
+    useEffect(() => {
+        let authToken = sessionStorage.getItem('Auth Token')
+        if (authToken === "65fefd65c4d84d6sa1xad6wf8e6fe") {
+            navigate("/admin")
+        }else{
+            const role = localStorage.getItem("role");
+            if(role === "Hr"){  
+                navigate("/hrhome")
+            }else{
+                navigate("/home")
+            }
+        }
+        if (!authToken) {
+            navigate('/Login')
+        }
+    }, []);
+
+    function logout() {
+        setloadscreen(true)
+        try {
+            sessionStorage.removeItem('Auth Token');
+            setloadscreen(false)
+            navigate('/login')
+            toast.success("LogOut Successfully :)");
+        } catch (error) {
+            toast.error("Something Wrong. Try After Sometime")
+            setloadscreen(false)
+        }
+    }
 
     return (
         <div>
@@ -59,9 +94,8 @@ function Admin() {
                     >
 
 <button
-                            onClick={() => {
-                                navigate("/login")
-                            }}
+                            onClick={logout}
+
                             class="bg-indigo-700 shadow-lg hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
                             Logout
                         </button>

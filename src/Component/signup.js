@@ -93,10 +93,20 @@ function Signup() {
         }
         createUserWithEmailAndPassword(auth, SignupData.email, SignupData.password)
             .then(async (userCredential) => {
-                await setDoc(doc(db, "Users", userCredential.user.uid), data);
+                if (data.role === "Hr") {
+                    await setDoc(doc(db, "HR", userCredential.user.uid), {
+                        ...data,
+                        id:userCredential.user.uid
+                    });
+                } else {
+                    await setDoc(doc(db, "Users", userCredential.user.uid), {
+                        ...data,
+                        id:userCredential.user.uid
+                    });
+                }
                 toast.success("Account Created Successfully");
                 setloadscreen(false);
-                navigate("/Home");
+                navigate("/Login");
             })
             .catch((error) => {
                 const errorCode = error.code;
