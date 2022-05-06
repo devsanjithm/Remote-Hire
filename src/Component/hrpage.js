@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { auth, signOut } from "../firebase";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 function Hrpage() {
 
@@ -36,6 +38,47 @@ function Hrpage() {
         });
     }
 
+    const Inputdata  = {
+            jobrole: "",
+            jobAddress: "",
+            jobmode: "",
+            jobspec: "" ,
+            jobsalaryfrom: "",
+            jobsalaryto : ""       
+    }
+    const [JobInputdata,setJobInputdata] = useState(Inputdata);
+
+    function handleInputChange(e){
+        const { name, value } = e.target;
+        setJobInputdata({
+            ...JobInputdata,
+            [name]: value,
+        });
+    }
+
+    async function handlesubmit(e){
+        e.preventDefault();
+        var uid = localStorage.getItem('uid');
+            setJobInputdata({
+                ...JobInputdata,
+                createrid: uid,
+            });
+                
+            var utimeid = (Date.now() + Math.random()).toString(36)
+            try{
+            await setDoc(doc(db, "Jobs", utimeid), {
+                ...JobInputdata,
+                id:utimeid
+            });
+            console.log(JobInputdata);
+            toast.success("Data added")
+        }catch(e){
+            toast.error("Something wrong");
+
+        }
+
+    }
+
     return (
         <div>
             <div class="container px-4 mx-auto md:flex md:items-center bg-slate-100 p-5 mb-5">
@@ -52,16 +95,18 @@ function Hrpage() {
                             class="bg-indigo-700 shadow-lg hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
                             Find Jobs
                         </button>
-                    </div>
+                    </div> */}
                     <div
                         className="px-3 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
                     >
                         <button
-
+                            onClick={()=>{
+                                navigate("/hrhome")
+                            }}
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                            Appiled Jobs
+                            List Jobs
                         </button>
-                    </div> */}
+                    </div>
 
                     <div
                         className="px-3 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
@@ -156,33 +201,53 @@ function Hrpage() {
                             <div className="w-[80%] flex justify-center">
                                 <form style={{ "width": 70 + "%" }}>
                                     <div class="relative z-0 w-full mb-6 group">
-                                        <input type="text" name="floating_email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" required placeholder=" " />
+                                        <input 
+                                        onChange={handleInputChange}
+                                        value={JobInputdata.jobrole}
+                                        type="text" name="jobrole" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" required placeholder=" " />
                                         <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Job Role</label>
                                     </div>
                                     <div class="relative z-0 w-full mb-6 group">
-                                        <input type="text" name="floating_password" id="floating_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
+                                        <input type="text" 
+                                        onChange={handleInputChange}
+                                        value={JobInputdata.jobmode}
+                                        name="jobmode" id="floating_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
                                         <label for="floating_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Job Mode</label>
                                     </div>
                                     <div class="relative z-0 w-full mb-6 group">
-                                        <input type="text" name="repeat_password" id="floating_repeat_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
+                                        <input type="text" 
+                                        onChange={handleInputChange}
+                                        value={JobInputdata.jobAddress}
+                                        name="jobAddress" id="floating_repeat_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
                                         <label for="floating_repeat_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Job Address</label>
                                     </div>
 
                                     <div class="grid xl:grid-cols-2 xl:gap-6">
                                         <div class="relative z-0 w-full mb-6 group">
-                                            <input type="text" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="jobsalaryfrom" id="floating_phone" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
+                                            <input type="text" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" 
+                                            onChange={handleInputChange}
+                                            value={JobInputdata.jobsalaryfrom}
+                                            name="jobsalaryfrom" id="floating_phone" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
                                             <label for="floating_phone" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Job salary (From)</label>
                                         </div>
                                         <div class="relative z-0 w-full mb-6 group">
-                                            <input type="text" name="jobsalaryto" id="floating_company" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
+                                            <input type="text" 
+                                             onChange={handleInputChange}
+                                             value={JobInputdata.jobsalaryto}
+                                            name="jobsalaryto" id="floating_company" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
                                             <label for="floating_company" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Job Salary (TO)</label>
                                         </div>
                                     </div>
                                     <div class="relative z-0 w-full mb-6 group">
-                                        <input type="password" name="repeat_password" id="floating_repeat_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
+                                        <input type="text" 
+                                        onChange={handleInputChange}
+                                        value={JobInputdata.jobspec}
+                                        name="jobspec"  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required="" />
                                         <label for="floating_repeat_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Job Specification</label>
                                     </div>
-                                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                                    <button 
+                                    onClick={handlesubmit}
+                                    type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
                                 </form>
                             </div>
                         </div>

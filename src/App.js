@@ -7,7 +7,7 @@ import Home from "./Component/Home";
 import Add from "./Component/Add";
 import Hrpage from "./Component/hrpage";
 import Admin from "./Component/Admin";
-import Aprove from "./Component/Approve";
+import HrHome from "./Component/hrhome";
 import { ContextProvider } from "./context";
 import 'react-toastify/dist/ReactToastify.css';
 import Approve from "./Component/Approve";
@@ -27,6 +27,7 @@ function App() {
 					<Route exact path="/Add" element={<Add />} />
 					<Route exact path="/admin" element={<Admin />} />
 					<Route exact path="/Approve" element={<Approve />} />
+					<Route exact path="/hrHome" element={<HrHome />} />
 				</Routes>
 			</Router>
 		</ContextProvider>
