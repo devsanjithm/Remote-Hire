@@ -1,18 +1,18 @@
 import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../context";
-import { auth, signOut,db } from "../firebase";
+import { auth, signOut, db } from "../firebase";
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import Loading from "./Loading";
-import { doc, getDocs,collection,  } from "firebase/firestore";
+import { doc, getDocs, collection, } from "firebase/firestore";
 
 
 function Home() {
 
     const { user, setloadscreen, loadscreen, userroll, setuserroll } = useContext(UserContext);
     const navigate = useNavigate();
-    
-    const data =[];
+
+    const data = [];
     const [Search, setSearch] = useState(data);
     const [jobdata, setjobdata] = useState(data);
 
@@ -20,11 +20,11 @@ function Home() {
         let authToken = sessionStorage.getItem('Auth Token')
         if (authToken === "65fefd65c4d84d6sa1xad6wf8e6fe") {
             navigate("/admin")
-        }else{
+        } else {
             const role = localStorage.getItem("role");
-            if(role === "Hr"){  
+            if (role === "Hr") {
                 navigate("/hrhome")
-            }else{
+            } else {
                 navigate("/home")
             }
         }
@@ -32,12 +32,12 @@ function Home() {
             navigate('/Login')
         }
         getdata();
-    },[]);
-    
-    async function getdata(){
-        const docRef = collection(db,"Jobs");
+    }, []);
+
+    async function getdata() {
+        const docRef = collection(db, "Jobs");
         const docSnap = await getDocs(docRef);
-        docSnap.forEach((doc)=>{
+        docSnap.forEach((doc) => {
             data.push(doc.data())
         })
         setjobdata([...data]);
@@ -66,7 +66,6 @@ function Home() {
             setjobdata(Search);
             return;
         }
-        
         const resuldata = Search.filter(item => {
             const itemdata = item.jobrole.toLowerCase();
             const resdata = itemdata.indexOf(value) > -1;
@@ -156,7 +155,7 @@ function Home() {
                     jobdata.map((element, index) => {
                         return (
                             <div key={index} className="p-2">
-                                <div class="max-w-md rounded overflow-hidden shadow-lg border-[2px] border-blue-900">
+                                <div class="max-w-md rounded min-h-[45vh] max-h-[45vh] overflow-hidden shadow-lg border-[2px] border-blue-900">
                                     <div class="px-6 pt-4">
                                         <div class="font-bold text-2xl">{element.jobrole}</div>
                                     </div>
@@ -165,13 +164,13 @@ function Home() {
                                         <p className="text-sm">{element.jobmode}</p>
                                         <p className="text-sm font-bold pt-2">₹{element.jobsalaryfrom} - ₹{element.jobsalaryto} per year</p>
                                     </div>
-                                    <div class="px-6 pt-4 pb-2">
+                                    <div class="px-6 pt-4 pb-2 max-h-[15vh] min-h-[15vh] overflow-hidden">
                                         <p>{element.jobspec}</p>
                                     </div>
                                     <div className="px-6 pt-1 flex justify-center pb-4">
-                                        <div>
+                                        <div className="">
                                             <button
-                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ">
                                                 Apply
                                             </button>
                                         </div>
