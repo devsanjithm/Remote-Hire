@@ -96,12 +96,13 @@ function Signup() {
                 if (data.role === "Hr") {
                     await setDoc(doc(db, "HR", userCredential.user.uid), {
                         ...data,
-                        id:userCredential.user.uid
+                        id: userCredential.user.uid
                     });
                 } else {
                     await setDoc(doc(db, "Users", userCredential.user.uid), {
                         ...data,
-                        id:userCredential.user.uid
+                        id: userCredential.user.uid,
+                        appiledJob: []
                     });
                 }
                 toast.success("Account Created Successfully");

@@ -16,7 +16,8 @@ function Home() {
     const [Search, setSearch] = useState(data);
     const [jobdata, setjobdata] = useState(data);
     const uid = localStorage.getItem('uid')
-    const [userdata, setuserdata] = useState("");
+    const [userdata, setuserdata] = useState([]);
+    const [AppiledData, setAppiledData] = useState([]);
 
     useEffect(() => {
         let authToken = sessionStorage.getItem('Auth Token')
@@ -52,9 +53,10 @@ function Home() {
         try {
             const docsnap = await getDoc(docref);
             setuserdata(docsnap.data());
-            console.log(docsnap.data());
+            setAppiledData([...docsnap.data().appiledJob]);
         } catch (error) {
             toast.error("Something Wrong");
+            console.log(error);
         }
     }
 
@@ -203,9 +205,7 @@ function Home() {
             <div className=" m-5 p-2 grid grid-cols-3 ">
                 {
                     jobdata.map((element, index) => {
-                        if(userdata.appiledJob.includes(element.id)){
-                            return <p className="text-center">-Null-</p>
-                        }
+
                         return (
                             <div key={index} className="p-2">
                                 <div class="max-w-md rounded min-h-[45vh] max-h-[45vh] overflow-hidden shadow-lg border-[2px] border-blue-900">
@@ -220,12 +220,13 @@ function Home() {
                                     <div class="px-6 pt-4 pb-2 max-h-[15vh] min-h-[15vh] overflow-hidden">
                                         <p>{element.jobspec}</p>
                                     </div>
-                                    <div className="px-6 pt-1 flex justify-center pb-4">
+                                    <div className="px-6 pt-1 flex justify-center pb-5">
                                         <div className="">
                                             <button
                                                 onClick={() => handleClick(element)}
-                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                                Apply
+                                                disabled={AppiledData.includes(element.id)}
+                                                class={AppiledData.includes(element.id) ? "bg-blue-100 hover:bg-blue-100 text-white font-bold py-2 px-4 rounded" : "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"}>
+                                                {AppiledData.includes(element.id) ? "Appiled" : "Apply"}
                                             </button>
                                         </div>
                                     </div>
