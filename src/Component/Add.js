@@ -1,17 +1,45 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../context";
 import { Link, useNavigate } from "react-router-dom";
+import { doc, getDocs,collection, setDoc,getDoc } from "firebase/firestore";
+
 function Add() {
 
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
+    const [jobdata, setjobdata] = useState(data);
+    const data =[]
+    const uid =  localStorage.getItem('uid')
+
 
     useEffect(() => {
         let authToken = sessionStorage.getItem('Auth Token')
+        if (authToken === "65fefd65c4d84d6sa1xad6wf8e6fe") {
+            navigate("/admin")
+        }else{
+            const role = localStorage.getItem("role");
+            if(role === "Hr"){  
+                navigate("/hrhome")
+            }else{
+                navigate("/add")
+            }
+        }
         if (!authToken) {
             navigate('/Login')
         }
     }, []);
+
+    async function getdata(){
+        const docRef = collection(db,"Users",uid);
+        const docSnap = await getDoc(docRef);
+        const docRef1 = collection(db,"Jobs");
+        const docSnap1 = await getDoc(docRef);
+        docSnap1.forEach((doc)=>{
+            data.push(doc.data())
+        })
+        setjobdata([...data]);
+        setSearch([...data])
+    }
 
 
     return (
@@ -38,6 +66,41 @@ function Add() {
                 </div>
             </div>
         </div>
+        <div className=" m-5 p-2 grid grid-cols-3 ">
+                {
+                    jobdata.map((element, index) => {
+
+                        return (
+                            <div key={index} className="p-2">
+                                <div class="max-w-md rounded overflow-hidden shadow-lg border-[2px] border-blue-900">
+                                    <div class="px-6 pt-4">
+                                        <div class="font-bold text-2xl">{element.jobrole}</div>
+                                    </div>
+                                    <div className="px-6 pt-1">
+                                        <p className="text-sm">{element.jobAddress}</p>
+                                        <p className="text-sm">{element.jobmode}</p>
+                                        <p className="text-sm font-bold pt-2">₹{element.jobsalaryfrom} - ₹{element.jobsalaryto} per year</p>
+                                    </div>
+                                    <div class="px-6 pt-4 pb-2">
+                                        <p>{element.jobspec}</p>
+                                    </div>
+                                    <div className="px-6 pt-1 flex justify-center pb-4">
+                                        <div>
+                                            <button
+                                                onClick={()=>handleClick(element)}
+                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                                Apply
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+
+
+            </div>
 
 
         </>

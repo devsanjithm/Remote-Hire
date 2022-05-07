@@ -79,8 +79,6 @@ function Home() {
     async function handleClick(e){
         const data =[]
         console.log(e);
-        const docref = doc(db,"Users",uid);
-        const docsnap = await getDoc(docref);
         await setDoc(doc(db,"Users",uid),{
             appiledJob:[e.id]
         },{merge:true})
