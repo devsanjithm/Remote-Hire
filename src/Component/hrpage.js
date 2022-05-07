@@ -192,10 +192,6 @@ function Hrpage() {
 
                             </div>
 
-
-
-
-
                         </div> :
                         <div className="flex justify-center mt-5 ">
                             <div className="w-[80%] flex justify-center">

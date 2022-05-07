@@ -1,23 +1,28 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-
+import { auth, signOut, db } from "../firebase";
+import { toast } from "react-toastify";
+import { doc, getDocs, collection, setDoc, getDoc } from "firebase/firestore";
 function Approve() {
 
     const [BtnToggle, setbtntoggle] = useState(true);
     const navigate = useNavigate();
-    const data = [
-
-        {
-            name: "Sanjith",
-            Age: "Age: 38",
-            desg: "Software developer",
-            Experience: "12 years",
-            Domain: "Web development",
-        }
-
-    ]
+    const data = []
     const [jobdata, setjobdata] = useState(data);
 
+    useEffect(() => {
+        getdata();
+    }, []);
+
+    async function getdata() {
+        const docRef = collection(db, "HR");
+        const docSnap = await getDocs(docRef);
+        docSnap.forEach((doc) => {
+            data.push(doc.data())
+        })
+        setjobdata([...data]);
+        console.log(data);
+    }
 
     return (
         <div>
@@ -68,7 +73,12 @@ function Approve() {
                     </div>
                 </div>
             </div>
-            <div class="font-bold text-2xl">List of Hr Available</div>
+            <div className="flex  justify-center">
+                <div className="flex-col">
+                    <p className="text-2xl font-bold">List of HR Available</p>
+                    <hr className="text-blue-900 bg-blue-900 h-[5px] border mt-3 border-blue-900"></hr>
+                </div>
+            </div>
             <div className="flex justify-center p-5">
 
 
@@ -84,9 +94,8 @@ function Approve() {
                                             <div class="font-bold text-2xl">{element.name}</div>
                                         </div>
                                         <div className="px-6 pt-1">
-                                            <p className="text-sm">{element.Age}</p>
-                                            <p className="text-sm">{element.desg}</p>
-                                            <p className="text-sm font-bold pt-2">{element.Experience}</p>
+                                            <p className="text-sm">Role : {element.role}</p>
+                                            <p className="text-sm">Mobile Number : {element.mobilenumber}</p>
                                         </div>
                                         <div class="px-6 pt-4 pb-2">
                                             <p>{element.Domain}</p>
@@ -94,10 +103,7 @@ function Approve() {
                                         <div className="px-6 pt-1 flex justify-center pb-4">
                                             <div>
                                                 <button
-                                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                                    Update
-                                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <button
+                                                    // onClick={handleremove}
                                                     class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                                     Remove
                                                 </button>

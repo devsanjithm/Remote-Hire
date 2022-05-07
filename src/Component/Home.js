@@ -62,6 +62,8 @@ function Home() {
         setloadscreen(true)
         signOut(auth).then(() => {
             sessionStorage.removeItem('Auth Token');
+            localStorage.removeItem('role');
+            localStorage.removeItem('uid')
             setloadscreen(false)
             navigate('/login')
             toast.success("LogOut Successfully :)");
@@ -201,12 +203,9 @@ function Home() {
             <div className=" m-5 p-2 grid grid-cols-3 ">
                 {
                     jobdata.map((element, index) => {
-                        userdata.appiledJob.forEach((d) => {
-                            if (d === element.id) {
-                                console.log("true");
-                                return
-                            }
-                        })
+                        if(userdata.appiledJob.includes(element.id)){
+                            return <p className="text-center">-Null-</p>
+                        }
                         return (
                             <div key={index} className="p-2">
                                 <div class="max-w-md rounded min-h-[45vh] max-h-[45vh] overflow-hidden shadow-lg border-[2px] border-blue-900">

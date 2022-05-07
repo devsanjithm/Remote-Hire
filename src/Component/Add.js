@@ -1,44 +1,50 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../context";
+import { auth, signOut, db } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
-import { doc, getDocs,collection, setDoc,getDoc } from "firebase/firestore";
+import { doc, getDocs, collection, setDoc, getDoc } from "firebase/firestore";
 
 function Add() {
 
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
+    const data = []
     const [jobdata, setjobdata] = useState(data);
-    const data =[]
-    const uid =  localStorage.getItem('uid')
+    const uid = localStorage.getItem('uid')
 
 
     useEffect(() => {
         let authToken = sessionStorage.getItem('Auth Token')
         if (authToken === "65fefd65c4d84d6sa1xad6wf8e6fe") {
             navigate("/admin")
-        }else{
+        } else {
             const role = localStorage.getItem("role");
-            if(role === "Hr"){  
+            if (role === "Hr") {
                 navigate("/hrhome")
-            }else{
+            } else {
                 navigate("/add")
             }
         }
         if (!authToken) {
             navigate('/Login')
         }
+        getdata()
     }, []);
 
-    async function getdata(){
-        const docRef = collection(db,"Users",uid);
+    async function getdata() {
+        const docRef = doc(db, "Users", uid);
         const docSnap = await getDoc(docRef);
-        const docRef1 = collection(db,"Jobs");
-        const docSnap1 = await getDoc(docRef);
-        docSnap1.forEach((doc)=>{
-            data.push(doc.data())
+        const jobappileddata = docSnap.data().appiledJob
+        const docRef1 = collection(db, "Jobs");
+        const docSnap1 = await getDocs(docRef1);
+        docSnap1.forEach((doc) => {
+            if (jobappileddata.includes(doc.data().id)) {
+                data.push(doc.data())
+            }
         })
         setjobdata([...data]);
-        setSearch([...data])
+        console.log(data);
+        console.log(jobappileddata);
     }
 
 
@@ -66,7 +72,13 @@ function Add() {
                 </div>
             </div>
         </div>
-        <div className=" m-5 p-2 grid grid-cols-3 ">
+        <div className="flex  justify-center">
+                <div className="flex-col">
+                    <p className="text-2xl font-bold">Appiled Jobs</p>
+                    <hr className="text-blue-900 bg-blue-900 h-[5px] border mt-3 border-blue-900"></hr>
+                </div>
+            </div>
+            <div className=" m-5 p-2 grid grid-cols-3 ">
                 {
                     jobdata.map((element, index) => {
 
@@ -87,9 +99,9 @@ function Add() {
                                     <div className="px-6 pt-1 flex justify-center pb-4">
                                         <div>
                                             <button
-                                                onClick={()=>handleClick(element)}
+                                                // onClick={()=>handleClick(element)}
                                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                                Apply
+                                                Applied
                                             </button>
                                         </div>
                                     </div>
