@@ -4,7 +4,7 @@ import { auth, signOut, db } from "../firebase";
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import Loading from "./Loading";
-import { doc, getDocs,collection, setDoc,getDoc } from "firebase/firestore";
+import { doc, getDocs, collection, setDoc, getDoc } from "firebase/firestore";
 
 
 function Home() {
@@ -15,7 +15,8 @@ function Home() {
     const data = [];
     const [Search, setSearch] = useState(data);
     const [jobdata, setjobdata] = useState(data);
-    const uid =  localStorage.getItem('uid')
+    const uid = localStorage.getItem('uid')
+    const [userdata, setuserdata] = useState("");
 
     useEffect(() => {
         let authToken = sessionStorage.getItem('Auth Token')
@@ -33,6 +34,7 @@ function Home() {
             navigate('/Login')
         }
         getdata();
+        getuserdata();
     }, []);
 
     async function getdata() {
@@ -43,6 +45,17 @@ function Home() {
         })
         setjobdata([...data]);
         setSearch([...data])
+    }
+
+    async function getuserdata() {
+        const docref = doc(db, "Users", uid);
+        try {
+            const docsnap = await getDoc(docref);
+            setuserdata(docsnap.data());
+            console.log(docsnap.data());
+        } catch (error) {
+            toast.error("Something Wrong");
+        }
     }
 
     function logout() {
@@ -75,14 +88,37 @@ function Home() {
         setjobdata([...resuldata])
     }
 
-    async function handleClick(e){
-        const data =[]
-        console.log(e);
-        const docref = doc(db,"Users",uid);
-        const docsnap = await getDoc(docref);
-        await setDoc(doc(db,"Users",uid),{
-            appiledJob:[e.id]
-        },{merge:true})
+    async function handleClick(e) {
+
+        const data = []
+        if (userdata.appiledJob === undefined) {
+            data.push(e.id)
+        } else {
+            userdata.appiledJob.forEach(d => {
+                data.push(d);
+            })
+        }
+        if (!(data.includes(e.id))) {
+            data.push(e.id)
+        } else {
+            return
+        }
+        console.log(data);
+        try {
+            await setDoc(doc(db, "Users", uid), {
+                appiledJob: data
+            }, { merge: true })
+            toast.success("Data Added")
+            setuserdata({
+                ...userdata,
+                appiledJob: data
+            })
+            const jobd = [];
+
+        } catch (error) {
+            toast.error("something Went wrong");
+            console.log(error);
+        }
 
     }
 
@@ -165,7 +201,12 @@ function Home() {
             <div className=" m-5 p-2 grid grid-cols-3 ">
                 {
                     jobdata.map((element, index) => {
-
+                        userdata.appiledJob.forEach((d) => {
+                            if (d === element.id) {
+                                console.log("true");
+                                return
+                            }
+                        })
                         return (
                             <div key={index} className="p-2">
                                 <div class="max-w-md rounded min-h-[45vh] max-h-[45vh] overflow-hidden shadow-lg border-[2px] border-blue-900">
@@ -183,7 +224,7 @@ function Home() {
                                     <div className="px-6 pt-1 flex justify-center pb-4">
                                         <div className="">
                                             <button
-                                                onClick={()=>handleClick(element)}
+                                                onClick={() => handleClick(element)}
                                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                                 Apply
                                             </button>
