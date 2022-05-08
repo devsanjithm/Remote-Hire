@@ -18,7 +18,7 @@ function Home() {
     const uid = localStorage.getItem('uid')
     const [userdata, setuserdata] = useState([]);
     const [AppiledData, setAppiledData] = useState([]);
-    const [popup, setpopup] = useState(true);
+    const [popup, setpopup] = useState(false);
 
 
     useEffect(() => {
