@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import Loading from "./Loading";
 import { doc, getDocs, collection, setDoc, getDoc } from "firebase/firestore";
-
+import axios from 'axios';
 
 function Home() {
 
@@ -18,6 +18,8 @@ function Home() {
     const uid = localStorage.getItem('uid')
     const [userdata, setuserdata] = useState([]);
     const [AppiledData, setAppiledData] = useState([]);
+    const [popup, setpopup] = useState(true);
+
 
     useEffect(() => {
         let authToken = sessionStorage.getItem('Auth Token')
@@ -93,7 +95,6 @@ function Home() {
     }
 
     async function handleClick(e) {
-
         const data = []
         if (userdata.appiledJob === undefined) {
             data.push(e.id)
@@ -112,18 +113,47 @@ function Home() {
             await setDoc(doc(db, "Users", uid), {
                 appiledJob: data
             }, { merge: true })
-            toast.success("Data Added")
             setuserdata({
                 ...userdata,
                 appiledJob: data
             })
-            const jobd = [];
-
+            setAppiledData([...data])
+            toast.success("JOB Appiled. We Let You Known When HR Approves or Reject")
+            const message = "This is from the remote hire. A " + userdata.name + " has been Appiled to your Jobs " + e.jobrole + ". Check in portal for further information";
+            axios({
+                method: 'post',
+                url: 'https://remote-hire.herokuapp.com/send',
+                data: {
+                    email: "sanjithm695@gmail.com",
+                    messageHtml: message,
+                    subject: "A job Application Notification "
+                }
+            })
+                // fetch("http://localhost:3001/send", requestOptions)
+                .then((response) => {
+                    if (response.data.msg === 'success') {
+                        toast.success("Email sent, awesome!");
+                        this.resetForm()
+                    } else if (response.data.msg === 'fail') {
+                        alert("Oops, something went wrong. Try again")
+                    }
+                })
         } catch (error) {
             toast.error("something Went wrong");
             console.log(error);
         }
-
+        try {
+            const timestamp = new Date().getTime().toString();
+            await setDoc(doc(db, "AppiledJobs", timestamp), {
+                ...userdata,
+                ...e,
+                timestamp: timestamp,
+                status: "pending"
+            })
+        } catch (e) {
+            toast.error("something wrong");
+            console.log(e);
+        }
     }
 
     return (
@@ -133,44 +163,39 @@ function Home() {
             }
 
 
-            <div class="container px-4 mx-auto md:flex md:items-center bg-slate-100 p-5 mb-5">
+            <div
+                class="container px-4 mx-auto md:flex md:items-center bg-slate-100 p-5 mb-5">
 
                 <div class="flex justify-between items-center">
                     <a href="#" class="font-bold text-4xl text-indigo-600">Remote Hire</a>
                 </div>
 
                 <div class="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
-                    <div
-                        className="px-3 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
-                    >
-                        <button
-                            onClick={() => {
-                                navigate("/home")
-                            }}
-                            class="bg-indigo-700 shadow-lg hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                            Find Jobs
-                        </button>
+                    <div>
+                        <div
+                            onClick={() => setpopup(!popup)}
+                            className="bg-blue-400 px-5 py-3 rounded-full cursor-pointer">
+                            <p
+                                className="text-center">{userdata.name}</p>
+                        </div>
                     </div>
-                    <div
-                        className="px-3 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
-                    >
-                        <button
-                            onClick={gotoAdd}
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                            Appiled Jobs
-                        </button>
-                    </div>
+                    {
+                        popup ?
+                            <div className="absolute top-20 right-5 bg-white p-5 shadow-md rounded">
+                                <div className="">
+                                    <p
+                                        onClick={gotoAdd}
+                                        className="py-1 pb-2 cursor-pointer">Appiled Jobs</p>
+                                    <p
+                                        onClick={logout}
+                                        className=" text-red-500 text-lg cursor-pointer">Logout</p>
+                                </div>
+                            </div>
+                            : null
+                    }
 
-                    <div
-                        className="px-3 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
-                    >
 
-                        <button
-                            onClick={logout}
-                            class="bg-red-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                            Logout
-                        </button>
-                    </div>
+
                 </div>
             </div>
             <div className="flex justify-center">

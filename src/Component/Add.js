@@ -72,7 +72,7 @@ function Add() {
                 </div>
             </div>
         </div>
-        <div className="flex  justify-center">
+            <div className="flex  justify-center">
                 <div className="flex-col">
                     <p className="text-2xl font-bold">Appiled Jobs</p>
                     <hr className="text-blue-900 bg-blue-900 h-[5px] border mt-3 border-blue-900"></hr>
@@ -84,7 +84,7 @@ function Add() {
 
                         return (
                             <div key={index} className="p-2">
-                                <div class="max-w-md rounded overflow-hidden shadow-lg border-[2px] border-blue-900">
+                                <div class="max-w-md rounded min-h-[35vh] max-h-[35vh] overflow-hidden shadow-lg border-[2px] border-blue-900">
                                     <div class="px-6 pt-4">
                                         <div class="font-bold text-2xl">{element.jobrole}</div>
                                     </div>
@@ -93,17 +93,8 @@ function Add() {
                                         <p className="text-sm">{element.jobmode}</p>
                                         <p className="text-sm font-bold pt-2">₹{element.jobsalaryfrom} - ₹{element.jobsalaryto} per year</p>
                                     </div>
-                                    <div class="px-6 pt-4 pb-2">
+                                    <div class="px-6 pt-4 pb-2 max-h-[15vh] min-h-[15vh] overflow-hidden">
                                         <p>{element.jobspec}</p>
-                                    </div>
-                                    <div className="px-6 pt-1 flex justify-center pb-4">
-                                        <div>
-                                            <button
-                                                // onClick={()=>handleClick(element)}
-                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                                Applied
-                                            </button>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

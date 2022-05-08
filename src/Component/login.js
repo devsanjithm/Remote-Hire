@@ -21,7 +21,7 @@ function Login() {
     }
     const auth = getAuth()
     const [LoginData, setLoginData] = useState(Input);
-    const { user, setloadscreen, loadscreen, userroll, setuserroll } = useContext(UserContext);
+    const { user, setUser, setloadscreen, loadscreen, userroll, setuserroll } = useContext(UserContext);
     const navigate = useNavigate();
 
 
@@ -38,9 +38,9 @@ function Login() {
         let role = localStorage.getItem('role')
         console.log(authToken);
         if (authToken) {
-            if(role === "Hr"){
+            if (role === "Hr") {
                 navigate("/hrhome")
-            }else if(role === "Employee"){
+            } else if (role === "Employee") {
                 navigate("/home")
             }
         }
@@ -70,30 +70,31 @@ function Login() {
             toast.error("Password must contain more than 6 letters")
             return;
         }
-        if (LoginData.role === "" ) {
-            if(LoginData.email !== "admin@remotehire.com"){
+        if (LoginData.role === "") {
+            if (LoginData.email !== "admin@remotehire.com") {
                 toast.error("Role must be specified")
                 return;
             }
         }
         setloadscreen(true);
-        if(LoginData.email === "admin@remotehire.com" && LoginData.password === "123456"){
+        if (LoginData.email === "admin@remotehire.com" && LoginData.password === "123456") {
             sessionStorage.setItem('Auth Token', "65fefd65c4d84d6sa1xad6wf8e6fe");
             navigate("/admin");
             return;
         }
         signInWithEmailAndPassword(auth, LoginData.email, LoginData.password)
             .then(async (userCredential) => {
-                const docRef = doc(db, LoginData.role === "Hr" ? "HR":"Users", userCredential.user.uid);
+                const docRef = doc(db, LoginData.role === "Hr" ? "HR" : "Users", userCredential.user.uid);
                 const docSnap = await getDoc(docRef);
                 if (LoginData.role === docSnap.data().role) {
-                    localStorage.setItem('role',LoginData.role)
+                    setUser(userCredential.user)
+                    localStorage.setItem('role', LoginData.role)
                     toast.success("Logged in Successfully");
                     sessionStorage.setItem('Auth Token', userCredential._tokenResponse.refreshToken);
-                    localStorage.setItem('uid',userCredential.user.uid)
-                    if(LoginData.role === "Hr"){
+                    localStorage.setItem('uid', userCredential.user.uid)
+                    if (LoginData.role === "Hr") {
                         navigate("/hrhome")
-                    }else{
+                    } else {
                         navigate("/home")
                     }
                     setloadscreen(false);
