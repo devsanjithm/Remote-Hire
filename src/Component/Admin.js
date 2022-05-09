@@ -20,11 +20,11 @@ function Admin() {
         let authToken = sessionStorage.getItem('Auth Token')
         if (authToken === "65fefd65c4d84d6sa1xad6wf8e6fe") {
             navigate("/admin")
-        }else{
+        } else {
             const role = localStorage.getItem("role");
-            if(role === "Hr"){  
+            if (role === "Hr") {
                 navigate("/hrhome")
-            }else{
+            } else {
                 navigate("/home")
             }
         }
@@ -74,7 +74,7 @@ function Admin() {
                                 navigate("/Approve")
                             }}
                             class="bg-indigo-700 shadow-lg hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                            Add / Remove Hr
+                            Remove Hr
                         </button>
                     </div>
                     {/* <div
@@ -91,7 +91,7 @@ function Admin() {
                         className="px-3 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
                     >
 
-<button
+                        <button
                             onClick={logout}
 
                             class="bg-indigo-700 shadow-lg hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
@@ -107,44 +107,44 @@ function Admin() {
                 </div>
             </div>
             <div className="flex justify-center p-5">
-                
-                
-                        
-                    
-                        <div className=" m-5 p-2 grid grid-cols-3 ">
 
-                            {
-                                jobdata.map((element, index) => {
-                                    return (
-                                        <div key={index} className="p-2">
-                                            <div class="max-w-md rounded min-h-[30vh] max-h-[30vh] overflow-hidden shadow-lg border-[2px] border-blue-900">
-                                    <div class="px-6 pt-4">
-                                        <div class="font-bold text-2xl">{element.jobrole}</div>
-                                    </div>
-                                    <div className="px-6 pt-1">
-                                        <p className="text-sm">{element.jobAddress}</p>
-                                        <p className="text-sm">{element.jobmode}</p>
-                                        <p className="text-sm font-bold pt-2">₹{element.jobsalaryfrom} - ₹{element.jobsalaryto} per year</p>
-                                    </div>
-                                    <div class="px-6 pt-4 pb-2">
-                                        <p>{element.jobspec}</p>
-                                    </div>
-                                   
-                                </div>
+
+
+
+                <div className=" m-5 p-2 grid grid-cols-3 ">
+
+                    {
+                        jobdata.map((element, index) => {
+                            return (
+                                <div key={index} className="p-2">
+                                    <div class="max-w-md rounded min-h-[30vh] max-h-[30vh] overflow-hidden shadow-lg border-[2px] border-blue-900">
+                                        <div class="px-6 pt-4">
+                                            <div class="font-bold text-2xl">{element.jobrole}</div>
                                         </div>
-                                    )
-                                })
-                            }
+                                        <div className="px-6 pt-1">
+                                            <p className="text-sm">{element.jobAddress}</p>
+                                            <p className="text-sm">{element.jobmode}</p>
+                                            <p className="text-sm font-bold pt-2">₹{element.jobsalaryfrom} - ₹{element.jobsalaryto} per year</p>
+                                        </div>
+                                        <div class="px-6 pt-4 pb-2">
+                                            <p>{element.jobspec}</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
 
 
-                        </div>
+                </div>
 
 
 
 
 
-                    </div>
-            
+            </div>
+
         </div>
     )
 }

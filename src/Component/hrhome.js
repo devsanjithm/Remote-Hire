@@ -1,8 +1,8 @@
-import React, { useState,useEffect,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { UserContext } from "../context";
 import { toast } from "react-toastify";
-import { auth, signOut,db } from "../firebase";
+import { auth, signOut, db } from "../firebase";
 import { doc, getDocs, collection, setDoc, getDoc } from "firebase/firestore";
 
 function HrHome() {
@@ -16,16 +16,16 @@ function HrHome() {
     const [jobdata, setjobdata] = useState(data);
 
 
-    
+
     useEffect(() => {
         let authToken = sessionStorage.getItem('Auth Token')
         if (authToken === "65fefd65c4d84d6sa1xad6wf8e6fe") {
             navigate("/admin")
-        }else{
+        } else {
             const role = localStorage.getItem("role");
-            if(role === "Hr"){  
+            if (role === "Hr") {
                 navigate("/hrhome")
-            }else{
+            } else {
                 navigate("/home")
             }
         }
@@ -35,17 +35,17 @@ function HrHome() {
         getdata();
     }, []);
 
-        async function getdata() {
-            const docRef = collection(db, "Jobs");
-            const docSnap = await getDocs(docRef);
-            docSnap.forEach((doc) => {
-                if(uid === doc.data().createrid){
-                    data.push(doc.data())
-                }
-            })
-            setjobdata([...data]);
-        }
-    
+    async function getdata() {
+        const docRef = collection(db, "Jobs");
+        const docSnap = await getDocs(docRef);
+        docSnap.forEach((doc) => {
+            if (uid === doc.data().createrid) {
+                data.push(doc.data())
+            }
+        })
+        setjobdata([...data]);
+    }
+
     function Logout() {
         signOut(auth).then(() => {
             sessionStorage.removeItem('Auth Token');
@@ -101,7 +101,7 @@ function HrHome() {
                     </div>
                 </div>
 
-                
+
             </div>
             <div className="flex  justify-center">
                 <div className="flex-col">
@@ -109,31 +109,37 @@ function HrHome() {
                     <hr className="text-blue-900 bg-blue-900 h-[5px] border mt-3 border-blue-900"></hr>
                 </div>
             </div>
-            <div className=" m-5 p-2 grid grid-cols-3 ">
-                {
-                    jobdata.map((element, index) => {
-                        return (
-                            <div key={index} className="p-2">
-                                <div class="max-w-md rounded min-h-[30vh] max-h-[30vh] overflow-hidden shadow-lg border-[2px] border-blue-900">
-                                    <div class="px-6 pt-4">
-                                        <div class="font-bold text-2xl">{element.jobrole}</div>
-                                    </div>
-                                    <div className="px-6 pt-1">
-                                        <p className="text-sm">{element.jobAddress}</p>
-                                        <p className="text-sm">{element.jobmode}</p>
-                                        <p className="text-sm font-bold pt-2">₹{element.jobsalaryfrom} - ₹{element.jobsalaryto} per year</p>
-                                    </div>
-                                    <div class="px-6 pt-4 pb-2 max-h-[15vh] min-h-[15vh] overflow-hidden">
-                                        <p>{element.jobspec}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    })
-                }
+            {
+                jobdata.length === 0 ?
+                    <div className="flex justify-center p-10">
+                        <p className="text-center">--- No jobs Till now ---</p>
+                    </div>
+                    :
 
-
-            </div>
+                    <div className=" m-5 p-2 grid grid-cols-3 ">
+                        {
+                            jobdata.map((element, index) => {
+                                return (
+                                    <div key={index} className="p-2">
+                                        <div class="max-w-md rounded min-h-[30vh] max-h-[30vh] overflow-hidden shadow-lg border-[2px] border-blue-900">
+                                            <div class="px-6 pt-4">
+                                                <div class="font-bold text-2xl">{element.jobrole}</div>
+                                            </div>
+                                            <div className="px-6 pt-1">
+                                                <p className="text-sm">{element.jobAddress}</p>
+                                                <p className="text-sm">{element.jobmode}</p>
+                                                <p className="text-sm font-bold pt-2">₹{element.jobsalaryfrom} - ₹{element.jobsalaryto} per year</p>
+                                            </div>
+                                            <div class="px-6 pt-4 pb-2 max-h-[15vh] min-h-[15vh] overflow-hidden">
+                                                <p>{element.jobspec}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+            }
         </div>
     )
 }
