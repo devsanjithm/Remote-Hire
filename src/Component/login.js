@@ -145,7 +145,7 @@ function Login() {
                                     name="email"
                                     type="text" required></input>
                                 <span></span>
-                                <label>Email or username</label>
+                                <label>Email</label>
                             </div>
                             <div class="txt_field" id='password'>
                                 <input type="password"
