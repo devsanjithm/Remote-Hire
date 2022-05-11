@@ -25,6 +25,7 @@ function Login() {
     const navigate = useNavigate();
 
 
+
     function handleInputChange(e) {
         const { name, value } = e.target;
         setLoginData({
@@ -88,6 +89,7 @@ function Login() {
                 const docSnap = await getDoc(docRef);
                 if (LoginData.role === docSnap.data().role) {
                     setUser(userCredential.user)
+                    localStorage.setItem("UserData", userCredential.user);
                     localStorage.setItem('role', LoginData.role)
                     toast.success("Logged in Successfully");
                     sessionStorage.setItem('Auth Token', userCredential._tokenResponse.refreshToken);

@@ -81,10 +81,13 @@ function Add() {
             <div className=" m-5 p-2 grid grid-cols-3 ">
                 {
                     jobdata.map((element, index) => {
-
+                        function timestamp(e) {
+                            var u = new Date(e);
+                            return u.toLocaleString()
+                        }
                         return (
                             <div key={index} className="p-2">
-                                <div class="max-w-md rounded min-h-[35vh] max-h-[35vh] overflow-hidden shadow-lg border-[2px] border-blue-900">
+                                <div class="max-w-md rounded min-h-[45vh] max-h-[35vh] overflow-hidden shadow-lg border-[2px] border-blue-900">
                                     <div class="px-6 pt-4">
                                         <div class="font-bold text-2xl">{element.jobrole}</div>
                                     </div>
@@ -93,8 +96,13 @@ function Add() {
                                         <p className="text-sm">{element.jobmode}</p>
                                         <p className="text-sm font-bold pt-2">₹{element.jobsalaryfrom} - ₹{element.jobsalaryto} per year</p>
                                     </div>
+
                                     <div class="px-6 pt-4 pb-2 max-h-[15vh] min-h-[15vh] overflow-hidden">
                                         <p>{element.jobspec}</p>
+                                    </div>
+                                    <div className="px-6 pt-1">
+                                        <p className="text-lg font-bold">Time : {timestamp(element.timestamp)}</p>
+                                        <p className="text-lg font-bold">Uploaded By : {element.createrName}</p>
                                     </div>
                                 </div>
                             </div>

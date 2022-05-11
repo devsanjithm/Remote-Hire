@@ -96,19 +96,20 @@ function Home() {
 
     async function handleClick(e) {
         const data = []
+        console.log(e);
         if (userdata.appiledJob === undefined) {
-            data.push(e.id)
+            data.push(e.timeid)
         } else {
             userdata.appiledJob.forEach(d => {
                 data.push(d);
             })
         }
-        if (!(data.includes(e.id))) {
-            data.push(e.id)
+        if (!(data.includes(e.timeid))) {
+            data.push(e.timeid)
         } else {
             return
         }
-        console.log(data);
+        console.log(uid);
         try {
             await setDoc(doc(db, "Users", uid), {
                 appiledJob: data
@@ -143,7 +144,7 @@ function Home() {
             console.log(error);
         }
         try {
-            const timestamp = new Date().getTime().toString();
+            const timestamp = new Date().getTime();
             await setDoc(doc(db, "AppiledJobs", timestamp), {
                 ...userdata,
                 ...e,
@@ -231,9 +232,14 @@ function Home() {
                 {
                     jobdata.map((element, index) => {
 
+                        function timestamp(e) {
+                            var u = new Date(e);
+                            return u.toLocaleString()
+                        }
+
                         return (
                             <div key={index} className="p-2">
-                                <div class="max-w-md rounded min-h-[45vh] max-h-[45vh] overflow-hidden shadow-lg border-[2px] border-blue-900">
+                                <div class="max-w-md rounded min-h-[50vh] max-h-[45vh] overflow-hidden shadow-lg border-[2px] border-blue-900">
                                     <div class="px-6 pt-4">
                                         <div class="font-bold text-2xl">{element.jobrole}</div>
                                     </div>
@@ -244,6 +250,10 @@ function Home() {
                                     </div>
                                     <div class="px-6 pt-4 pb-2 max-h-[15vh] min-h-[15vh] overflow-hidden">
                                         <p>{element.jobspec}</p>
+                                    </div>
+                                    <div className="px-6 pt-1">
+                                        <p className="text-lg font-bold">Time : {timestamp(element.timestamp)}</p>
+                                        <p className="text-lg font-bold">Uploaded By : {element.createrName}</p>
                                     </div>
                                     <div className="px-6 pt-1 flex justify-center pb-5">
                                         <div className="">

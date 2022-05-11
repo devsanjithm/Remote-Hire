@@ -1,14 +1,18 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { auth, signOut, db } from "../firebase";
 import { toast } from "react-toastify";
-import { doc, getDocs, collection, setDoc, getDoc } from "firebase/firestore";
+import { doc, getDocs, collection, setDoc, getDoc, deleteDoc } from "firebase/firestore";
+import { getAuth, deleteUser } from "firebase/auth";
+
 function Approve() {
 
     const [BtnToggle, setbtntoggle] = useState(true);
     const navigate = useNavigate();
     const data = []
     const [jobdata, setjobdata] = useState(data);
+    const auth = getAuth();
+    const user = auth.currentUser;
 
     useEffect(() => {
         getdata();
@@ -22,6 +26,26 @@ function Approve() {
         })
         setjobdata([...data]);
         console.log(data);
+    }
+
+    async function handleremove(e) {
+        console.log(e);
+        try {
+            deleteUser(user).then(() => {
+                console.log("user deleted")
+            }).catch((error) => {
+                toast.error("Something Wrong")
+            });
+            await deleteDoc(doc(db, "HR", e.id));
+            const data = jobdata.filter(d => {
+                return d.id !== e.id
+            })
+            setjobdata([...data]);
+            toast.success("Hr Removed Successfully")
+        } catch (error) {
+            console.log(error);
+            toast.error("Something Wrong");
+        }
     }
 
     return (
@@ -103,7 +127,7 @@ function Approve() {
                                         <div className="px-6 pt-1 flex justify-center pb-4">
                                             <div>
                                                 <button
-                                                    // onClick={handleremove}
+                                                    onClick={() => handleremove(element)}
                                                     class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                                     Remove
                                                 </button>

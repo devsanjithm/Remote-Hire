@@ -11,6 +11,7 @@ function Hrpage() {
     const navigate = useNavigate();
     const uid = localStorage.getItem('uid')
     const [jobdata, setjobdata] = useState([]);
+    const userData = localStorage.getItem("UserData")
 
     useEffect(() => {
         getdata();
@@ -53,6 +54,8 @@ function Hrpage() {
         jobsalaryfrom: "",
         jobsalaryto: "",
         createrid: uid,
+        timestamp: "",
+        createrName: userData.name
     }
     const [JobInputdata, setJobInputdata] = useState(Inputdata);
 
@@ -67,13 +70,16 @@ function Hrpage() {
     async function handlesubmit(e) {
         e.preventDefault();
         var utimeid = (Date.now() + Math.random()).toString(36)
+        const timestamp = new Date().getTime();
+        console.log(timestamp);
         try {
             await setDoc(doc(db, "Jobs", utimeid), {
                 ...JobInputdata,
-                timeid: utimeid
-            });
-            console.log(JobInputdata);
+                timeid: utimeid,
+                timestamp: timestamp
+            }, { merge: true });
             toast.success("Data added")
+            setJobInputdata(Inputdata)
         } catch (e) {
             toast.error("Something wrong");
 
@@ -89,7 +95,7 @@ function Hrpage() {
                 status: "Approved"
             }, { merge: true })
             const timestamp = new Date().getTime().toString();
-            await setDoc(doc(db, "HR", uid, "ApprovedJobs", e.id), {
+            await setDoc(doc(db, "HR", uid, "ApprovedJobs", e.timeid), {
                 jobid: e.id,
                 timestamp: timestamp
             })
@@ -254,70 +260,75 @@ function Hrpage() {
                                     </thead>
                                     <tbody>
                                         {
-                                            jobdata.map((element, index) => {
-                                                return (
-                                                    <tr key={index} class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                                        <th scope="row" class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                                                            {element.name}
-                                                        </th>
-                                                        <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                                                            {element.jobrole}
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            <button
-                                                                onClick={() => handleapprove(element)}
-                                                                class="bg-blue-600 py-1 hover:bg-blue-700 text-white font-bold px-4 rounded-full">
-                                                                Approve
-                                                            </button>
-                                                        </td>
-                                                        <td class="px-6 py-4">
-                                                            <button
-                                                                onClick={() => handlereject(element)}
-                                                                class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-4 rounded-full">
-                                                                Reject
-                                                            </button>
-                                                        </td>
+                                            jobdata.length === 0 ?
+                                                <div className="flex justify-end p-10">
+                                                    <p className="">--- No Appiled Employee Till now ---</p>
+                                                </div>
+                                                :
+                                                jobdata.map((element, index) => {
+                                                    return (
+                                                        <tr key={index} class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                                            <th scope="row" class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                                                                {element.name}
+                                                            </th>
+                                                            <td class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                                                                {element.jobrole}
+                                                            </td>
+                                                            <td class="px-6 py-4">
+                                                                <button
+                                                                    onClick={() => handleapprove(element)}
+                                                                    class="bg-blue-600 py-1 hover:bg-blue-700 text-white font-bold px-4 rounded-full">
+                                                                    Approve
+                                                                </button>
+                                                            </td>
+                                                            <td class="px-6 py-4">
+                                                                <button
+                                                                    onClick={() => handlereject(element)}
+                                                                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-4 rounded-full">
+                                                                    Reject
+                                                                </button>
+                                                            </td>
 
-                                                    </tr>
+                                                        </tr>
 
-                                                    // <div key={index} className="p-2">
-                                                    //     <div class="max-w-md rounded overflow-hidden shadow-lg border-[2px] border-blue-900">
-                                                    //         <div class="px-6 pt-4">
-                                                    //             <div class="font-bold text-2xl">{element.username}</div>
-                                                    //         </div>
-                                                    //         <div class="px-6 pt-4">
-                                                    //             <div class="font-bold text-2xl">{element.jobrole}</div>
-                                                    //         </div>
-                                                    //         <div className="px-6 pt-1">
-                                                    //             <p className="text-sm">{element.jobAddress}</p>
-                                                    //             <p className="text-sm">{element.jobmode}</p>
-                                                    //             <p className="text-sm font-bold pt-2">₹{element.jobsalaryfrom} - ₹{element.jobsalaryto} per year</p>
-                                                    //         </div>
-                                                    //         <div class="px-6 pt-4 pb-2">
-                                                    //             <p>{element.jobstatus}</p>
-                                                    //         </div>
-                                                    //         <div class="px-6 pt-4 pb-2 max-h-[15vh] min-h-[15vh] overflow-hidden">
-                                                    //             <p>{element.jobspec}</p>
-                                                    //         </div>
-                                                    //         <div className="px-6 pt-1 flex justify-center pb-4">
-                                                    //             <div>
-                                                    //                 <button
-                                                    //                     onClick={handleapprove}
-                                                    //                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                                    //                     Approve
-                                                    //                 </button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    //             </div>
-                                                    //             <div>
-                                                    //                 <button
-                                                    //                     class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                                    //                     Reject
-                                                    //                 </button>
-                                                    //             </div>
-                                                    //         </div>
-                                                    //     </div>
-                                                    // </div>
-                                                )
-                                            })
+                                                        // <div key={index} className="p-2">
+                                                        //     <div class="max-w-md rounded overflow-hidden shadow-lg border-[2px] border-blue-900">
+                                                        //         <div class="px-6 pt-4">
+                                                        //             <div class="font-bold text-2xl">{element.username}</div>
+                                                        //         </div>
+                                                        //         <div class="px-6 pt-4">
+                                                        //             <div class="font-bold text-2xl">{element.jobrole}</div>
+                                                        //         </div>
+                                                        //         <div className="px-6 pt-1">
+                                                        //             <p className="text-sm">{element.jobAddress}</p>
+                                                        //             <p className="text-sm">{element.jobmode}</p>
+                                                        //             <p className="text-sm font-bold pt-2">₹{element.jobsalaryfrom} - ₹{element.jobsalaryto} per year</p>
+                                                        //         </div>
+                                                        //         <div class="px-6 pt-4 pb-2">
+                                                        //             <p>{element.jobstatus}</p>
+                                                        //         </div>
+                                                        //         <div class="px-6 pt-4 pb-2 max-h-[15vh] min-h-[15vh] overflow-hidden">
+                                                        //             <p>{element.jobspec}</p>
+                                                        //         </div>
+                                                        //         <div className="px-6 pt-1 flex justify-center pb-4">
+                                                        //             <div>
+                                                        //                 <button
+                                                        //                     onClick={handleapprove}
+                                                        //                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                                        //                     Approve
+                                                        //                 </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        //             </div>
+                                                        //             <div>
+                                                        //                 <button
+                                                        //                     class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                                        //                     Reject
+                                                        //                 </button>
+                                                        //             </div>
+                                                        //         </div>
+                                                        //     </div>
+                                                        // </div>
+                                                    )
+                                                })
                                         }
                                     </tbody>
                                 </table>
